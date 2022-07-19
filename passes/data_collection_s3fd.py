@@ -18,7 +18,14 @@ class DataCollectionS3fd(DataCollectionPass):
 
         current_dir = os.path.dirname(os.path.realpath(__file__))
         self.net.load_state_dict(torch.load(f'{current_dir}/../s3fd/s3fd_convert.pth'))
-        self.net.to(self.device).float()
+        try:
+            self.net.to(self.device).float()
+        except AssertionError as ae:
+            print(ae)
+            print(f'Casting detector to {self.device} failed.  Will fallback to cpu')
+            self.device = 'cpu'
+            self.net.to(self.device).float()
+
         self.net.eval()
 
         self.detect_large = detect_large

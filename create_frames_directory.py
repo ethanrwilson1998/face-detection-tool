@@ -1,8 +1,6 @@
 import argparse
 import glob
 import os
-import sys
-from datetime import datetime
 
 from manual_annotation.annotation_utils import create_annotation_directory
 from util.util import path_leaf
@@ -13,7 +11,7 @@ parser = argparse.ArgumentParser(description='The manual annotation system uses 
                                              'create a full frames directory rather than for each file when the GUI is '
                                              'first run.')
 parser.add_argument('input_path', type=str,
-                    help='path to input file or directory.  note: directories need to only contain valid video files.')
+                    help='path to input file or directory.  note: accepts .mp4, .avi, and .mov files.')
 parser.add_argument('frames_dir', type=str,
                     help='directory where video frames are stored.')
 parser.add_argument('-s', '--scale_factor', type=float, default=1,
@@ -42,6 +40,8 @@ if __name__ == '__main__':
         print(f'will process all files in {args.input_path}.')
         in_files = glob.glob(f'{args.input_path}//*')
         for in_file in in_files:
+            if path_leaf(in_file).split(".")[1] not in ['mp4', 'avi', 'mov']:
+                continue
             create_frames_directory(in_file)
 
     elif os.path.isfile(args.input_path):

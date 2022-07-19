@@ -19,10 +19,10 @@ parser.add_argument('output_path', type=str,
                     help='file or directory to store rendered results.')
 parser.add_argument('pickle_path', type=str,
                     help='file or directory where encoded pickle data should be stored.')
-parser.add_argument('-b', '--blur', type=str, choices=['none', 'subject_face', 'all_faces', 'all'], default='none',
+parser.add_argument('-b', '--blur', type=str, choices=['none', 'subject_face', 'all_faces', 'whole_frame'], default='none',
                     help='determine which areas, if any, to blur.')
-parser.add_argument('-i', '--intensity', type=float, default=10,
-                    help='blur strength.')
+parser.add_argument('-i', '--intensity', type=float, default=20,
+                    help='blur strength.  Lower values are stronger.  Default 20.')
 parser.add_argument('-d', '--debug', type=str, choices=['none', 'boxes', 'neighbors', 'boxes+neighbors', 'keypoints'],
                     default='none', help='determine any debug commands.  note: keypoints requires mtcnn.')
 
@@ -31,11 +31,12 @@ args = parser.parse_args()
 
 def create_processor(video_data, frames, pickle_path):
     render_passes = []
+    print(args.intensity)
     if args.blur == 'subject_face':
         render_passes.append(RenderingPassBlurChild(video_data, frames, args.intensity))
     if args.blur == 'all_faces':
         render_passes.append(RenderingPassBlur(video_data, frames, args.intensity))
-    if args.blur == 'all':
+    if args.blur == 'whole_frame':
         render_passes.append(RenderingPassBlurEverything(video_data, frames, args.intensity))
 
     if 'boxes' in args.debug:
@@ -64,7 +65,7 @@ if __name__ == '__main__':
 
             create_processor(VideoData(in_file, out_file), [], pickle_file).process()
 
-    elif os.path.isfile(args.input_path) and os.path.isfile(args.output_path) and os.path.isfile(args.pickle_path):
+    elif os.path.isfile(args.input_path) and os.path.isfile(args.pickle_path):
         print(f'will process {args.input_path} to {args.output_path}.')
 
         create_processor(VideoData(args.input_path, args.output_path), [], args.pickle_path).process()

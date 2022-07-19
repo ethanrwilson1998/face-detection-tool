@@ -108,6 +108,7 @@ class VideoData:
     height = 0
     fps = 0
     frame_count = 0
+    func = None
 
     def __init__(self, in_path="", out_path=""):
         self.in_path = in_path

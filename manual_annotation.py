@@ -37,7 +37,6 @@ def manual_annotation(in_path, pickle_path):
     processor = VideoProcessor([
         PickleDecodePass(video_data, frames, path=pickle_path),
         HeuristicPass(video_data, frames, max_size=1.1, max_offset=10000),
-        CurveFittingPass(video_data, frames),
         PickleEncodePass(video_data, frames, path=pickle_path),
         StatisticsPass(video_data, frames),
     ])
@@ -66,7 +65,6 @@ if __name__ == '__main__':
     elif os.path.isfile(args.input_path) and os.path.isfile(args.pickle_path):
         print(f'will process {args.input_path}/{args.pickle_path}.')
         manual_annotation(args.input_path, args.pickle_path)
-
 
     else:
         raise Exception(f'directory path mismatch between input and output arguments.')

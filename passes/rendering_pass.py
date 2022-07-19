@@ -115,9 +115,11 @@ class RenderingPassBlurChild(RenderingPassBlur):
             face_img = img[y:h, x:w]
 
             if self.video_data.func is None:
-                print("Uh oh, didn't run CurveFittingPass on the data")
-            s = interpolate.splev(frame_data.index, self.video_data.func)
-            intensity = blur_intensity(s, s, self.intensity)
+                # print("Uh oh, didn't run CurveFittingPass on the data")
+                intensity = blur_intensity(face.w, face.h, self.intensity)
+            else:
+                s = interpolate.splev(frame_data.index, self.video_data.func)
+                intensity = blur_intensity(s, s, self.intensity)
             # intensity = blur_intensity(face.w, face.h)
             try:
                 face_img = cv2.blur(face_img, (intensity, intensity))
@@ -191,7 +193,6 @@ class RenderingPassNearestNeighbor(RenderingPass):
 def blur_intensity(w, h, intensity=10):
     # sqrt(s)
     #return int(np.sqrt((w + h) / 2))
-
     # linear (s) / 10
     try:
         # blur/10
@@ -202,7 +203,7 @@ def blur_intensity(w, h, intensity=10):
         # return int(np.ceil((w + h) / 15))
         # blur/40
         # return int(np.ceil((w + h) / 20))
-    except:
+    except Exception as e:
         # either w or h was Nan
         return intensity
 

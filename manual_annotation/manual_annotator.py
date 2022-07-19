@@ -60,6 +60,10 @@ class App(QWidget):
         vbox.addWidget(self.frame_status)
         vbox.addWidget(self.cmd)
         self.setLayout(vbox)
+
+        self.update_image()
+        self.update_frame_status(self.frame_text())
+
         self.show()
 
     def keyPressEvent(self, e):

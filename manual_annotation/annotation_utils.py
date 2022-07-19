@@ -9,7 +9,7 @@ import numpy as np
 from util.objects import ManualAnnotation
 from util.util import path_leaf
 
-import ffmpeg
+# import ffmpeg
 
 
 def populate_annotations(path, dir="frames/"):
@@ -42,40 +42,41 @@ def create_dir(path, annotations, dir="frames/", scale=1):
     dims = video.get(cv2.CAP_PROP_FRAME_HEIGHT), video.get(cv2.CAP_PROP_FRAME_WIDTH)
     width, height = resize_dims(dims, scale)
 
-    # length = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
-    # for idx in tqdm(range(length)):
-    #     valid, img = video.read()
-    #     if valid:
-    #         last_img = img
-    #     if not valid:
-    #         # use the last working image if it's broken
-    #         img = last_img
-    #     try:
-    #         img = cv2.resize(img, resize_dims(img.shape[:2], scale))
-    #         cv2.imwrite(annotations[idx].path, img)
-    #     except:
-    #         # end of video, break the loop
-    #         break
-    start_time = time.time()
-    print(f'Processing {path}.')
-    ffmpeg.input(path).filter('scale', width, height).\
-        output(f'{dir}/%d.jpg', start_number=0).overwrite_output().run(quiet=True)
+    length = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
+    for idx in tqdm(range(length)):
+        valid, img = video.read()
+        if valid:
+            last_img = img
+        if not valid:
+            # use the last working image if it's broken
+            img = last_img
+        try:
+            img = cv2.resize(img, resize_dims(img.shape[:2], scale))
+            cv2.imwrite(annotations[idx].path, img)
+        except:
+            # end of video, break the loop
+            break
 
-    # writing the first and last frame over in opencv
-    video = cv2.VideoCapture(path)
-    num_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
-    last_frame = num_frames - 1
-
-    _, rf = video.read()
-    real_first = cv2.resize(rf, (width, height))
-    cv2.imwrite(f'{dir}/0.jpg', real_first)
-    video.set(1, last_frame)
-    _, rl = video.read()
-    real_last = cv2.resize(rl, (width, height))
-    cv2.imwrite(f'{dir}/{last_frame}.jpg', real_last)
-    video.release()
-
-    print(f'time: {time.time() - start_time} s')
+    # start_time = time.time()
+    # print(f'Processing {path}.')
+    # ffmpeg.input(path).filter('scale', width, height).\
+    #     output(f'{dir}/%d.jpg', start_number=0).overwrite_output().run(quiet=True)
+    #
+    # # writing the first and last frame over in opencv
+    # video = cv2.VideoCapture(path)
+    # num_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
+    # last_frame = num_frames - 1
+    #
+    # _, rf = video.read()
+    # real_first = cv2.resize(rf, (width, height))
+    # cv2.imwrite(f'{dir}/0.jpg', real_first)
+    # video.set(1, last_frame)
+    # _, rl = video.read()
+    # real_last = cv2.resize(rl, (width, height))
+    # cv2.imwrite(f'{dir}/{last_frame}.jpg', real_last)
+    # video.release()
+    #
+    # print(f'time: {time.time() - start_time} s')
 
 
 def check_dir(path, dir="frames/", scale=1):
