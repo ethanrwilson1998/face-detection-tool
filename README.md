@@ -12,6 +12,17 @@ and occlusions.
 This codebase was used to achieve full coverage when face swapping clinical
 behavioral sessions, seen in https://arxiv.org/abs/2204.03559.
 
+    @misc{https://doi.org/10.48550/arxiv.2204.03559,
+        doi = {10.48550/ARXIV.2204.03559},
+        url = {https://arxiv.org/abs/2204.03559},   
+        author = {Wilson, Ethan and Shic, Frederick and Skytta, Jenny and Jain, Eakta}, 
+        keywords = {Computer Vision and Pattern Recognition (cs.CV), Artificial Intelligence (cs.AI), FOS: Computer and information sciences, FOS: Computer and information sciences},  
+        title = {Practical Digital Disguises: Leveraging Face Swaps to Protect Patient Privacy},  
+        publisher = {arXiv},
+        year = {2022},
+        copyright = {Creative Commons Attribution 4.0 International}
+    }
+
 ---
 
 To install requirements with pip, run
@@ -211,3 +222,21 @@ Output should look like:
 >
     
 Further details of the FrameData, Face, DetectedObject, etc. can be seen in utils/objects.py
+
+# License
+MIT license. See LICENSE for additional details.
+
+# Citation
+
+If you use this code to assist with an academic publication, please cite our work as:
+
+    @misc{https://doi.org/10.48550/arxiv.2204.03559,
+        doi = {10.48550/ARXIV.2204.03559},
+        url = {https://arxiv.org/abs/2204.03559},   
+        author = {Wilson, Ethan and Shic, Frederick and Skytta, Jenny and Jain, Eakta}, 
+        keywords = {Computer Vision and Pattern Recognition (cs.CV), Artificial Intelligence (cs.AI), FOS: Computer and information sciences, FOS: Computer and information sciences},  
+        title = {Practical Digital Disguises: Leveraging Face Swaps to Protect Patient Privacy},  
+        publisher = {arXiv},
+        year = {2022},
+        copyright = {Creative Commons Attribution 4.0 International}
+    }
