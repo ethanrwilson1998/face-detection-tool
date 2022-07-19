@@ -67,6 +67,5 @@ if __name__ == '__main__':
         print(f'will process {args.input_path}/{args.pickle_path}.')
         manual_annotation(args.input_path, args.pickle_path)
 
-
     else:
         raise Exception(f'directory path mismatch between input and output arguments.')

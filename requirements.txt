@@ -1,0 +1,14 @@
+core==1.0.1
+facelib==1.2.1
+ffmpeg==1.4
+ffmpeg_python==0.2.0
+iou==0.1.0
+keras==2.9.0
+mtcnn==0.1.1
+numpy==1.21.6
+opencv_python==4.6.0.66
+PyQt5==5.15.7
+scipy==1.7.3
+tensorflow==2.9.1
+torch==1.12.0
+tqdm==4.64.0

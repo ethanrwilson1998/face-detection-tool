@@ -19,7 +19,7 @@ parser.add_argument('output_path', type=str,
                     help='file or directory to store rendered results.')
 parser.add_argument('pickle_path', type=str,
                     help='file or directory where encoded pickle data should be stored.')
-parser.add_argument('-b', '--blur', type=str, choices=['none', 'subject_face', 'all_faces', 'all'], default='none',
+parser.add_argument('-b', '--blur', type=str, choices=['none', 'subject_face', 'all_faces', 'whole_frame'], default='none',
                     help='determine which areas, if any, to blur.')
 parser.add_argument('-i', '--intensity', type=float, default=10,
                     help='blur strength.')
@@ -35,7 +35,7 @@ def create_processor(video_data, frames, pickle_path):
         render_passes.append(RenderingPassBlurChild(video_data, frames, args.intensity))
     if args.blur == 'all_faces':
         render_passes.append(RenderingPassBlur(video_data, frames, args.intensity))
-    if args.blur == 'all':
+    if args.blur == 'whole_frame':
         render_passes.append(RenderingPassBlurEverything(video_data, frames, args.intensity))
 
     if 'boxes' in args.debug:

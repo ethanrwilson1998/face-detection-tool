@@ -1,12 +1,7 @@
 import argparse
 import glob
 import os
-import sys
-from datetime import datetime
 
-from passes.data_collection_haar_cascades import DataCollectionFaceCascade
-from passes.data_collection_mtcnn import DataCollectionMTCNNMultithread
-from passes.data_collection_s3fd import DataCollectionS3fd
 from passes.interpolation_pass import FaceInterpPass
 from passes.nearest_neighbor_pass import NearestNeighborPass, RemoveNeighborsPass
 from passes.pickle_pass import PickleEncodePass
@@ -17,7 +12,6 @@ from util.util import path_leaf
 if DFL_absolute_path:
     from passes.data_collection_deepfacelab import DataCollectionDeepFaceLab
 
-from util.logger import Unbuffered
 from util.objects import VideoData
 from util.video_processor import VideoProcessor
 
@@ -27,7 +21,7 @@ parser.add_argument('input_path', type=str,
 parser.add_argument('output_path', type=str,
                     help='file or directory where encoded pickle data should be stored.')
 parser.add_argument('-d', '--detection_method', type=str, choices=['s3fd', 'haar', 'mtcnn', 'dfl'], default='s3fd',
-                    help='which face detection method to apply.')
+                    help='which face detection method to apply.  Default is s3fd.')
 parser.add_argument('-i', '--interpolation', type=int,
                     help='optionally perform interpolation at this stage, filling in the specified number of frames.')
 parser.add_argument('-s', '--skip_processed_files', action='store_true',
@@ -42,10 +36,13 @@ args = parser.parse_args()
 
 def create_processor(video_data, frames):
     if args.detection_method == 's3fd':
-        data_collection_pass = DataCollectionS3fd(video_data, frames)
+        from passes.data_collection_s3fd import DataCollectionS3fd
+        data_collection_pass = DataCollectionS3fd(video_data, frames, device=args.device)
     elif args.detection_method == 'haar':
+        from passes.data_collection_haar_cascades import DataCollectionFaceCascade
         data_collection_pass = DataCollectionFaceCascade(video_data, frames)
     elif args.detection_method == 'mtcnn':
+        from passes.data_collection_mtcnn import DataCollectionMTCNNMultithread
         data_collection_pass = DataCollectionMTCNNMultithread(video_data, frames)
     elif args.detection_method == 'dfl':
         data_collection_pass = DataCollectionDeepFaceLab(video_data, frames)
@@ -82,7 +79,7 @@ if __name__ == '__main__':
             else:
                 create_processor(VideoData(in_file, out_file), []).process()
 
-    elif os.path.isfile(args.input_path) and os.path.isfile(args.output_path):
+    elif os.path.isfile(args.input_path):
         print(f'will process {args.input_path} to {args.output_path}.')
         if args.skip_processed_files and os.path.exists(args.output_path):
             print("Skipping {0}, file has already been pickled.".format(args.input_path))

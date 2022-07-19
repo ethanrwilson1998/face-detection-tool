@@ -1,8 +1,6 @@
 import argparse
 import glob
 import os
-import sys
-from datetime import datetime
 
 from passes.interpolation_pass import FaceInterpPass
 from passes.nearest_neighbor_pass import NearestNeighborPass, RemoveNeighborsPass
@@ -15,7 +13,6 @@ if DFL_absolute_path:
     from passes.data_collection_deepfacelab import DataCollectionDeepFaceLab
     from passes.deepfacelab_dataset_pass import DeepFaceLabDatasetPass
 
-from util.logger import Unbuffered
 from util.objects import VideoData
 from util.video_processor import VideoProcessor
 
@@ -43,7 +40,7 @@ args = parser.parse_args()
 def create_processor(video_data, frames, pickle_path):
 
     try:
-        return VideoProcessor([
+        VideoProcessor([
             PickleDecodePass(video_data, frames, path=pickle_path),
             # Short range interpolation tied to the DataCollectionDeepFaceLab's frame_skip
             NearestNeighborPass(video_data, frames, search_depth=args.frame_skip + 1),
@@ -52,10 +49,10 @@ def create_processor(video_data, frames, pickle_path):
             PickleEncodePass(video_data, frames, path=pickle_path),
             DeepFaceLabDatasetPass(video_data, frames, dataset_path=video_data.out_path),
             StatisticsPass(video_data, frames),
-        ])
+        ]).process()
     except:
         print(f'No pickle data for {video_data.in_path}, will attempt to collect data.')
-        return VideoProcessor([
+        VideoProcessor([
             DataCollectionDeepFaceLab(video_data, frames, frame_skip=args.frame_skip, image_scale=args.detector_scale),
             NearestNeighborPass(video_data, frames, search_depth=args.frame_skip + 1),
             FaceInterpPass(video_data, frames),
@@ -63,7 +60,7 @@ def create_processor(video_data, frames, pickle_path):
             PickleEncodePass(video_data, frames, path=pickle_path),
             DeepFaceLabDatasetPass(video_data, frames, dataset_path=video_data.out_path),
             StatisticsPass(video_data, frames),
-        ])
+        ]).process()
 
 
 if __name__ == '__main__':
@@ -78,14 +75,14 @@ if __name__ == '__main__':
             if args.skip_processed_files and os.path.exists(pickle_file):
                 print("Skipping {0}, file has already been pickled.".format(in_file))
             else:
-                create_processor(VideoData(in_file, out_file), [], pickle_file).process()
+                create_processor(VideoData(in_file, out_file), [], pickle_file)
 
-    elif os.path.isfile(args.input_path) and os.path.isfile(args.pickle_path) and os.path.isdir(args.frames_path):
+    elif os.path.isfile(args.input_path) and os.path.isdir(args.frames_path):
         print(f'will process {args.input_path} to {args.frames_path}.')
         if args.skip_processed_files and os.path.exists(args.pickle_path):
             print("Skipping {0}, file has already been pickled.".format(args.input_path))
         else:
-            create_processor(VideoData(args.input_path, args.frames_path), [], args.pickle_path).process()
+            create_processor(VideoData(args.input_path, args.frames_path), [], args.pickle_path)
 
     else:
         raise Exception(f'directory path mismatch between input and pickle arguments, or frames path '
