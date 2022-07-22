@@ -69,6 +69,10 @@ To use a conda environment:
 - create a conda environment using the provided environment.yml file:
 
         conda env create -n face-detection-tool --file environment.yml
+        
+- activate the environment
+
+        conda activate face-detection-tool
 
 __For GPU users, it may be easier to install dependencies with anaconda to ensure
 pytorch and tensorflow installs can easily detect the GPU.  Using cuda with pip installs
@@ -95,8 +99,18 @@ a corresponding .pickle embedding in output_path
 
 By default, the project uses s3fd face detection.
 To specify the detection method, use -d or --detection_method followed by 
-one of the options {s3fd, haar, mtcnn, dfl}.  __NOTE: s3fd and mtcnn can be 
+one of the options {s3fd, haar, mtcnn, dfl}.  
+
+>__NOTE: s3fd and mtcnn can be 
 VERY slow on CPU.  If running on CPU, haar cascades are recommended.__
+>
+>__Note: pip users may run into issues using s3fd.  If you see__
+>
+>>Runtime error: Numpy is not available
+>    
+>__you may need to downgrade your torch install, i.e.:__
+>
+>>pip install torch==1.11.0 torchvision==0.12.0 torchaudio==0.11.0
 
 - s3fd is highly accurate and scale invariant 
 (https://ieeexplore.ieee.org/document/8237292).
