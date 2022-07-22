@@ -87,4 +87,4 @@ if __name__ == '__main__':
             create_processor(VideoData(args.input_path, args.output_path), []).process()
 
     else:
-        raise Exception(f'directory path mismatch between input and output arguments.')
+        raise Exception(f'Possible i/o error.  Check for directory/path mismatch between input and output arguments.')

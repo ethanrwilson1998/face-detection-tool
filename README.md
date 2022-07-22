@@ -12,6 +12,8 @@ and occlusions.
 This codebase was used to achieve full coverage when face swapping clinical
 behavioral sessions, seen in https://arxiv.org/abs/2204.03559.
 
+![](./media/teaser_figure.PNG)
+
     @misc{https://doi.org/10.48550/arxiv.2204.03559,
         doi = {10.48550/ARXIV.2204.03559},
         url = {https://arxiv.org/abs/2204.03559},   
@@ -30,17 +32,47 @@ under the green code button or using
 
     git clone https://github.com/ethanrwilson1998/face-detection-tool.git
 
-To install requirements with pip, navigate to the head of the project directory in a 
-command line interface and run
+It is recommended to use a virtual python environment when downloading this repo.  Either 
+a python virtual environment or using a package manager like anaconda/miniconda.  __Recommended 
+to use conda.__
 
-    pip install -r requirements.txt
+---
+
+To use a virtual environment with pip, run the following commands (https://docs.python.org/3/tutorial/venv.html):
+
+- from the root directory, create the environment:
     
-Note, to run the mtcnn face detection with GPU you may need to install 
-tensorflow-gpu.  To run the s3fd face detector via cuda you should download
-pytorch using the instructions here: https://pytorch.org/get-started/locally/
+        python -m venv venv
+        
+- activate the environment:
+
+    - on Windows:
+        
+            venv\Scripts\activate.bat
+    
+    - on Unix/Mac:
+    
+            source venv/bin/activate
+        
+- install the project requirements:
+
+        pip install -r requirements.txt
+        
+---
+
+To use a conda environment:
+
+- ensure anaconda or miniconda are downloaded:
+
+    - https://docs.conda.io/projects/conda/en/latest/user-guide/install/download.html
+    
+- create a conda environment using the provided environment.yml file:
+
+        conda env create -n face-detection-tool --file environment.yml
 
 __For GPU users, it may be easier to install dependencies with anaconda to ensure
-pytorch and tensorflow installs can easily detect the GPU.__
+pytorch and tensorflow installs can easily detect the GPU.  Using cuda with pip installs
+can be a lot of trouble to get working.__
 
 ---
 
@@ -64,11 +96,11 @@ a corresponding .pickle embedding in output_path
 By default, the project uses s3fd face detection.
 To specify the detection method, use -d or --detection_method followed by 
 one of the options {s3fd, haar, mtcnn, dfl}.  __NOTE: s3fd and mtcnn can be 
-EXTREMELY slow on CPU.  If running on CPU, haar cascades are recommended.__
+VERY slow on CPU.  If running on CPU, haar cascades are recommended.__
 
 - s3fd is highly accurate and scale invariant 
 (https://ieeexplore.ieee.org/document/8237292).
-- haar cascades are very fast but not very accurate with many false positives
+- haar cascades are very fast but less accurate with many false positives
 (https://docs.opencv.org/3.4/db/d28/tutorial_cascade_classifier.html).
 - mtcnn is highly accurate but can be quite slow 
 (https://ieeexplore.ieee.org/abstract/document/7553523).
@@ -250,3 +282,25 @@ If you use this code to assist with an academic publication, please cite our wor
         year = {2022},
         copyright = {Creative Commons Attribution 4.0 International}
     }
+    
+Related face detection publications are:
+
+    @INPROCEEDINGS{8237292,  
+        author={Zhang, Shifeng and Zhu, Xiangyu and Lei, Zhen and Shi, Hailin and Wang, Xiaobo and Li, Stan Z.},  
+        booktitle={2017 IEEE International Conference on Computer Vision (ICCV)},   
+        title={S^3FD: Single Shot Scale-Invariant Face Detector},   
+        year={2017},  
+        volume={},  
+        number={},  
+        pages={192-201},  
+        doi={10.1109/ICCV.2017.30}}
+    
+    @ARTICLE{7553523,  
+        author={Zhang, Kaipeng and Zhang, Zhanpeng and Li, Zhifeng and Qiao, Yu},  
+        journal={IEEE Signal Processing Letters},   
+        title={Joint Face Detection and Alignment Using Multitask Cascaded Convolutional Networks},   
+        year={2016},  
+        volume={23},  
+        number={10},  
+        pages={1499-1503},  
+        doi={10.1109/LSP.2016.2603342}}
